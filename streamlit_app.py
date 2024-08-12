@@ -90,7 +90,7 @@ def main():
 
     max_tenure = data['tenure'].max()
     max_monthly_charges = data['MonthlyCharges'].max()
-    max_total_charges = data['TotalCharges'].max()
+    max_total_charges = float(data['TotalCharges'].max())
 
     # Radio buttons for options
     election = st.radio("Make Your Choice:", ("Feature Importance", "User-based SHAP", "Calculate the probability of CHURN"))
