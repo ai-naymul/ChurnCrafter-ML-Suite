@@ -47,3 +47,46 @@ def display_shap_summary(shap_values_cat_train, X_train):
     plt.close()
 
 # start from display_shap_waterfall function
+
+def display_shap_waterfall_plot(explainer, expected_values, shap_values, feature_names, max_display=20):
+    fig , ax = plt.subplots(figsize=(6,6), dpi=150)
+    shap.waterfall_plot.waterfall_legacy(expected_values, shap_values, feature_names=feature_names, max_display=max_display, show=False)
+    st.pyplot(fig)
+    plt.close()
+
+def summary(model , data, X_train, x_test):
+    explainer, shap_values_cat_train, shap_values_cat_test = calculate_shap(model, X_train, x_test)
+    display_shap_summary(shap_values_cat_train, X_train)
+
+
+def plot_shap(model, data, customer_id, X_train, x_test):
+    explainer, shap_values_cat_train, shap_values_cat_test = calculate_shap(model, X_train, x_test)
+    plot_shap_values(model, explainer, shap_values_cat_train, shap_values_cat_test, customer_id, X_train, x_test)
+    customer_index = x_test[x_test['customerID'] == customer_id].index[0]
+    display_shap_waterfall_plot(explainer, explainer.expected_value, shap_values_cat_test[customer_index], feature_names=x_test.columns, max_display=20)
+
+
+st.title('Telco customer churn prediction')
+
+
+## main function for the streamlit app
+
+def main():
+    model = load_model()
+    data = load_data()
+
+    X_train = load_x_y('data/X_train.pkl')
+    x_test = load_x_y('data/x_test.pkl')
+    Y_train = load_x_y('data/Y_train')
+    y_test = load_x_y('data/y_test')
+
+    max_tenure = data['tenure'].max()
+    max_monthly_charges = data['MonthlyCharges'].max()
+    max_total_charges = data['TotalCharges'].max()
+    ### Start from the radio button comment from the code.
+    election = st.radio("Make Your Choice:", ("Feature Importance", "User-based SHAP", "Calculate the probability of CHURN"))
+
+
+
+
+
